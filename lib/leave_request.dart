@@ -176,7 +176,7 @@ class _LeaveRequestPageState extends State<LeaveRequestPage> {
                         style: GoogleFonts.cairo(color: darkBlue, fontWeight: FontWeight.w700, fontSize: 18)),
                     const SizedBox(height: 6),
                     DropdownButtonFormField<String>(
-                      value: leaveType,
+                      initialValue: leaveType,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: inputBg,
@@ -265,7 +265,7 @@ class _LeaveRequestPageState extends State<LeaveRequestPage> {
                     ],
                   ),
                   const Divider(),
-                  ...leaveHistory.map((e) => _LeaveRow(e)).toList(),
+                  ...leaveHistory.map((e) => _LeaveRow(e)),
                 ]),
               ),
             ],
