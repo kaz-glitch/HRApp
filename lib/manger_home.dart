@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'salary.dart';
 import 'leave_management.dart';
 import 'attendance.dart';
+import 'managerprofile.dart'; // استدعاء صفحة البروفايل
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,11 +15,20 @@ class HomePage extends StatelessWidget {
         title: const Text('اسم الشركة', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         leading: const Icon(Icons.check_circle, color: Colors.white),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.person, color: Colors.white),
-          )
+            padding: const EdgeInsets.only(right: 16),
+            child: IconButton(
+              icon: const Icon(Icons.person, color: Colors.white),
+              tooltip: 'حساب المدير',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ManagerProfilePage()),
+                );
+              },
+            ),
+          ),
         ],
       ),
       body: Padding(
