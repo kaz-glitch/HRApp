@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'dart:ui' as ui; // <- مهم: نستورد enum من dart:ui مع alias
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'manger_home.dart';
 
 class AttendancePage extends StatefulWidget {
@@ -9,193 +14,285 @@ class AttendancePage extends StatefulWidget {
 }
 
 class _AttendancePageState extends State<AttendancePage> {
-  DateTime? selectedDate;
-  TextEditingController searchController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
+  String searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
 
-  List<Map<String, String>> employees = [
-    {"name": "اسم الموظف", "attendance": "08:00", "leave": "17:00", "note": "ملاحظة عادية"},
-    {"name": "اسم الموظف", "attendance": "08:05", "leave": "16:50", "note": "تأخير بسيط"},
-    {"name": "اسم الموظف", "attendance": "07:55", "leave": "17:05", "note": "ممتاز"},
-  ];
+  final List<Map<String, dynamic>> _records = List.generate(
+    8,
+    (i) => {
+      'name': 'اسم الموظف ${i + 1}',
+      'arrival': null,
+      'departure': null,
+      'notes': 'لا ملاحظات',
+    },
+  );
 
-  List<Map<String, String>> filteredEmployees = [];
-
-  @override
-  void initState() {
-    super.initState();
-    filteredEmployees = List.from(employees);
+  List<Map<String, dynamic>> get filteredRecords {
+    return _records
+        .where((r) => r['name'].toString().contains(searchQuery))
+        .toList();
   }
 
-  void filterSearch(String query) {
-    setState(() {
-      filteredEmployees = employees
-          .where((e) => e["name"]!.contains(query))
-          .toList();
-    });
-  }
+  int get totalEmployees => _records.length;
+  int get totalPresent => _records.where((r) => r['arrival'] != null).length;
+  int get totalAbsent => totalEmployees - totalPresent;
 
-  void pickDate() async {
-    DateTime now = DateTime.now();
-    DateTime? date = await showDatePicker(
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
       context: context,
-      initialDate: now,
-      firstDate: DateTime(now.year - 1),
-      lastDate: DateTime(now.year + 1),
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      locale: const Locale('ar', 'SA'),
+      builder: (context, child) {
+        return Directionality(
+          textDirection: ui.TextDirection.rtl, // استخدام ui.TextDirection
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
-    if (date != null) {
-      setState(() {
-        selectedDate = date;
-      });
-    }
+    if (picked != null) setState(() => selectedDate = picked);
   }
 
-  void exportData() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("تم تصدير البيانات بنجاح ✅")),
-    );
+  void _markArrival(Map<String, dynamic> emp) {
+    setState(() => emp['arrival'] = TimeOfDay.now());
+  }
+
+  void _markDeparture(Map<String, dynamic> emp) {
+    setState(() => emp['departure'] = TimeOfDay.now());
+  }
+
+  Future<void> _exportCsv() async {
+    final rows = <List<String>>[];
+    rows.add(['الاسم', 'الحضور', 'الانصراف', 'الملاحظات']);
+    for (final r in _records) {
+      rows.add([
+        r['name'],
+        r['arrival']?.format(context) ?? '',
+        r['departure']?.format(context) ?? '',
+        r['notes'],
+      ]);
+    }
+
+    final csv = rows.map((e) => e.join(',')).join('\n');
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/attendance.csv');
+    await file.writeAsString(csv);
+    await Share.shareXFiles([XFile(file.path)], text: 'تصدير سجل الحضور');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF123B5A),
-        title: const Text("سجل الحضور و الانصراف",
-            style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HomePage()),
-            );
-          },
+    return Directionality(
+      textDirection: ui.TextDirection.rtl, // استخدام ui.TextDirection هنا أيضاً
+      child: Scaffold(
+        backgroundColor: const Color(0xFF2E2E33),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF12384F),
+          title: const Text(
+            'سجل الحضور والانصراف',
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const HomePage()),
+              );
+            },
+          ),
+        ),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(14),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 420),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD9D0BA),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 18),
+                    // ======= الإحصائيات =======
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _statCard('الحضور', totalPresent.toString()),
+                          _statCard('الغياب', totalAbsent.toString()),
+                          _statCard('إجمالي الموظفين', totalEmployees.toString()),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    // ======= البحث + التاريخ =======
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '... البحث عن موظف',
+                                ),
+                                onChanged: (v) =>
+                                    setState(() => searchQuery = v),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: _pickDate,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFF8D6),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.calendar_month, size: 20),
+                                  const SizedBox(width: 8),
+                                  Text(DateFormat('yyyy-MM-dd')
+                                      .format(selectedDate)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ======= الجدول =======
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF7F7F7),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          children:
+                              filteredRecords.map((r) => _recordRow(r)).toList(),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    // ======= زر التصدير =======
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 10),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF86B399),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: _exportCsv,
+                          child: const Text('تصدير', style: TextStyle(fontSize: 16)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+    );
+  }
+
+  Widget _statCard(String title, String value) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 6),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
+          ],
+        ),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                _InfoCard(title: "إجمالي الموظفين", value: "03"),
-                _InfoCard(title: "الغياب", value: "00"),
-                _InfoCard(title: "الحضور", value: "03"),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // حقل اختيار التاريخ والبحث
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: searchController,
-                    onChanged: filterSearch,
-                    decoration: InputDecoration(
-                      hintText: "ابحث عن موظف...",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      prefixIcon: const Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton.icon(
-                  onPressed: pickDate,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF3CF60),
-                  ),
-                  icon: const Icon(Icons.calendar_today, color: Colors.white),
-                  label: Text(
-                    selectedDate == null
-                        ? "اختر التاريخ"
-                        : "${selectedDate!.year}-${selectedDate!.month}-${selectedDate!.day}",
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // الجدول
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ListView.builder(
-                  itemCount: filteredEmployees.length,
-                  itemBuilder: (context, index) {
-                    var emp = filteredEmployees[index];
-                    return Card(
-                      elevation: 3,
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      child: ListTile(
-                        title: Text(emp["name"]!,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16)),
-                        subtitle: Text(
-                            "الحضور: ${emp["attendance"]} | الانصراف: ${emp["leave"]}\nالملاحظات: ${emp["note"]}"),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: exportData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF80B6A1),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              child: const Text(
-                "تصدير",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            )
+            Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 6),
+            Text(title, style: const TextStyle(fontSize: 12, color: Colors.black54)),
           ],
         ),
       ),
     );
   }
-}
 
-class _InfoCard extends StatelessWidget {
-  final String title;
-  final String value;
-  const _InfoCard({required this.title, required this.value});
+  Widget _recordRow(Map<String, dynamic> emp) {
+    String arrival = emp['arrival'] == null
+        ? '00:00'
+        : (emp['arrival'] as TimeOfDay).format(context);
+    String departure = emp['departure'] == null
+        ? '00:00'
+        : (emp['departure'] as TimeOfDay).format(context);
 
-  @override
-  Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 3)],
+        border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
       ),
-      child: Column(
+      child: Row(
         children: [
-          Text(value,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: Color(0xFF123B5A))),
-          const SizedBox(height: 5),
-          Text(title, style: const TextStyle(fontSize: 13)),
+          Expanded(flex: 3, child: Text(emp['name'])),
+          Expanded(
+            flex: 2,
+            child: GestureDetector(
+              onTap: () => _markArrival(emp),
+              child: Column(
+                children: [
+                  Text(arrival),
+                  const SizedBox(height: 4),
+                  const Text('الحضور', style: TextStyle(fontSize: 11, color: Colors.black54)),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: GestureDetector(
+              onTap: () => _markDeparture(emp),
+              child: Column(
+                children: [
+                  Text(departure),
+                  const SizedBox(height: 4),
+                  const Text('الانصراف', style: TextStyle(fontSize: 11, color: Colors.black54)),
+                ],
+              ),
+            ),
+          ),
+          Expanded(flex: 3, child: Text(emp['notes'], style: const TextStyle(fontSize: 12))),
         ],
       ),
     );

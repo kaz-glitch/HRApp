@@ -13,9 +13,9 @@ class _SalaryPageState extends State<SalaryPage> {
   int selectedYear = DateTime.now().year;
 
   List<Map<String, dynamic>> salaries = [
-    {"name": "محمد", "dept": "المبيعات", "job": "موظف مبيعات", "salary": 5000, "deduction": 200},
-    {"name": "سارة", "dept": "المحاسبة", "job": "محاسبة", "salary": 5200, "deduction": 0},
-    {"name": "عبدالله", "dept": "الدعم الفني", "job": "فني دعم", "salary": 4800, "deduction": 100},
+    {"name": "محمد", "dept": "المبيعات", "job": "موظف مبيعات", "salary": 5000.0, "deduction": 200.0},
+    {"name": "سارة", "dept": "المحاسبة", "job": "محاسبة", "salary": 5200.0, "deduction": 0.0},
+    {"name": "عبدالله", "dept": "الدعم الفني", "job": "فني دعم", "salary": 4800.0, "deduction": 100.0},
   ];
 
   void exportData() {
@@ -34,14 +34,14 @@ class _SalaryPageState extends State<SalaryPage> {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Container(
-              padding: const EdgeInsets.all(16),
-              height: 300,
+              padding: const EdgeInsets.all(16.0),
+              height: 300.0,
               child: Column(
                 children: [
                   const Text("اختر الشهر والسنة",
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 10),
+                          TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -75,7 +75,7 @@ class _SalaryPageState extends State<SalaryPage> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF80B6A1),
-                      minimumSize: const Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50.0),
                     ),
                     onPressed: () {
                       setState(() {
@@ -84,7 +84,7 @@ class _SalaryPageState extends State<SalaryPage> {
                       });
                       Navigator.pop(context);
                     },
-                    child: const Text("تم", style: TextStyle(color: Colors.white, fontSize: 18)),
+                    child: const Text("تم", style: TextStyle(color: Colors.white, fontSize: 18.0)),
                   )
                 ],
               ),
@@ -114,7 +114,7 @@ class _SalaryPageState extends State<SalaryPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // اختيار الشهر والسنة
@@ -123,7 +123,7 @@ class _SalaryPageState extends State<SalaryPage> {
               children: [
                 Text("الشهر: $selectedMonth / السنة: $selectedYear",
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold)),
+                        fontSize: 16.0, fontWeight: FontWeight.bold)),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFF3CF60),
@@ -134,14 +134,14 @@ class _SalaryPageState extends State<SalaryPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20.0),
 
             // الجدول
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.85),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: ListView.builder(
                   itemCount: salaries.length,
@@ -149,11 +149,11 @@ class _SalaryPageState extends State<SalaryPage> {
                     var emp = salaries[index];
                     double net = emp["salary"] - emp["deduction"];
                     return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
                       child: ListTile(
                         title: Text("${emp["name"]} - ${emp["dept"]}",
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16)),
+                                fontWeight: FontWeight.bold, fontSize: 16.0)),
                         subtitle: Text(
                             "الوظيفة: ${emp["job"]}\nالراتب: ${emp["salary"]} ريال | الخصم: ${emp["deduction"]} ريال | الصافي: $net ريال"),
                       ),
@@ -163,18 +163,18 @@ class _SalaryPageState extends State<SalaryPage> {
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: exportData,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF80B6A1),
-                minimumSize: const Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50.0),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10.0)),
               ),
               child: const Text(
                 "تصدير",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 18.0),
               ),
             )
           ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'salary.dart';
-import 'leave_management.dart';
 import 'attendance.dart';
-import 'managerprofile.dart'; // استدعاء صفحة البروفايل
+import 'managerprofile.dart';
+import 'leave_management.dart'; // ✅ استدعاء صفحة إدارة الإجازات الجديدة
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -42,6 +42,8 @@ class HomePage extends StatelessWidget {
               child: Icon(Icons.person, size: 50, color: Colors.white),
             ),
             const SizedBox(height: 30),
+
+            // زر سجل الحضور والانصراف
             buildMenuButton(
               context,
               title: 'سجل الحضور و الانصراف',
@@ -50,14 +52,19 @@ class HomePage extends StatelessWidget {
               page: const AttendancePage(),
             ),
             const SizedBox(height: 15),
+
+            // زر إدارة الإجازات
             buildMenuButton(
               context,
               title: 'إدارة الإجازات',
               color: const Color(0xFFB9C87D),
               icon: Icons.calendar_month,
-              page: const LeaveManagementScreen(),
+              // ✅ هنا التعديل
+              page: const VacationManagementPage(),
             ),
             const SizedBox(height: 15),
+
+            // زر كشف الرواتب
             buildMenuButton(
               context,
               title: 'كشف الرواتب',
@@ -71,11 +78,13 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildMenuButton(BuildContext context,
-      {required String title,
-      required Color color,
-      required IconData icon,
-      required Widget page}) {
+  Widget buildMenuButton(
+    BuildContext context, {
+    required String title,
+    required Color color,
+    required IconData icon,
+    required Widget page,
+  }) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
@@ -92,11 +101,11 @@ class HomePage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title,
-              style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
+          Text(
+            title,
+            style: const TextStyle(
+                fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
           Icon(icon, color: Colors.white, size: 26),
         ],
       ),
