@@ -5,6 +5,7 @@ import 'employee_profile.dart';
 import 'leave_request.dart';
 import 'top_employees_screen.dart';
 import 'salary_screen.dart';
+import 'attendance_screen.dart';
 
 /// ====== نموذج إشعار + مصدر وهمي داخل نفس الملف (بدون ملفات خارجية) ======
 class NotificationItem {
