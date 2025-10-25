@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'monthly_attendance_screen.dart'; // تأكدي من وجود هذا الملف لاحقًا
 
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
@@ -79,6 +80,23 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   ),
                 ),
 
+              const SizedBox(height: 24),
+
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const MonthlyAttendanceScreen()),
+                  );
+                },
+                icon: const Icon(Icons.calendar_today),
+                label: Text('عرض سجل الحضور الشهري', style: GoogleFonts.cairo(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF2E4A56),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+
               const Spacer(),
 
               Container(
@@ -113,3 +131,4 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 }
+
