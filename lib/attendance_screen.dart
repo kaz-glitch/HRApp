@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'monthly_attendance_screen.dart'; // تأكدي من وجود هذا الملف لاحقًا
+import 'monthly_attendance_screen.dart';
 
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
@@ -31,12 +31,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const darkBlue = Color(0xFF2E4A56);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFE8DFC1),
         appBar: AppBar(
-          backgroundColor: const Color(0xFF2E4A56),
+          backgroundColor: darkBlue,
           title: Text('تسجيل الحضور والانصراف', style: GoogleFonts.cairo()),
         ),
         body: Padding(
@@ -44,19 +45,19 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'مرحبًا، أحمد الزهراني',
-                style: GoogleFonts.cairo(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
+              Text('مرحبًا، أحمد الزهراني',
+                  style: GoogleFonts.cairo(fontSize: 22, fontWeight: FontWeight.bold)),
               const SizedBox(height: 24),
 
               _buildStatusRow('الحالة:', isCheckedIn ? '✅ تم تسجيل الحضور' : '⏳ لم يتم الحضور بعد'),
-              _buildStatusRow('وقت الحضور:', checkInTime != null ? checkInTime!.toLocal().toString().substring(0, 16) : '—'),
+              _buildStatusRow('وقت الحضور:',
+                  checkInTime != null ? checkInTime!.toLocal().toString().substring(0, 16) : '—'),
               const SizedBox(height: 12),
               _buildStatusRow('الانصراف:', isCheckedOut ? '✅ تم تسجيل الانصراف' : '⏳ لم يتم الانصراف بعد'),
-              _buildStatusRow('وقت الانصراف:', checkOutTime != null ? checkOutTime!.toLocal().toString().substring(0, 16) : '—'),
+              _buildStatusRow('وقت الانصراف:',
+                  checkOutTime != null ? checkOutTime!.toLocal().toString().substring(0, 16) : '—'),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
               if (!isCheckedIn)
                 ElevatedButton.icon(
@@ -80,7 +81,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   ),
                 ),
 
-              const SizedBox(height: 24),
+              const Spacer(),
 
               ElevatedButton.icon(
                 onPressed: () {
@@ -89,15 +90,15 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   );
                 },
                 icon: const Icon(Icons.calendar_today),
-                label: Text('عرض سجل الحضور الشهري', style: GoogleFonts.cairo(fontSize: 16)),
+                label: Text('سجل الحضور الشهري', style: GoogleFonts.cairo(fontSize: 16)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2E4A56),
+                  backgroundColor: darkBlue,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 12),
 
               Container(
                 padding: const EdgeInsets.all(12),
@@ -131,4 +132,3 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 }
-
