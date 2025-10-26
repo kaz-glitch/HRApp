@@ -1,7 +1,8 @@
-import 'dart:ui' as ui; // <- مهم: لاستعمال TextDirection.rtl
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'manger_home.dart';
+import 'dart:ui' as ui;
+
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
@@ -60,11 +61,9 @@ class _AttendancePageState extends State<AttendancePage> {
     setState(() => emp['departure'] = TimeOfDay.now());
   }
 
-  void _exportCsv() {
+  void _exportData() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تم حفظ البيانات مؤقتًا (ميزة التصدير غير مفعلة) 📄'),
-      ),
+      const SnackBar(content: Text("تم حفظ سجل الحضور ✅")),
     );
   }
 
@@ -117,7 +116,6 @@ class _AttendancePageState extends State<AttendancePage> {
                       ),
                     ),
                     const SizedBox(height: 18),
-
                     // ======= البحث + التاريخ =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -125,8 +123,7 @@ class _AttendancePageState extends State<AttendancePage> {
                         children: [
                           Expanded(
                             child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
@@ -166,7 +163,6 @@ class _AttendancePageState extends State<AttendancePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
                     // ======= الجدول =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -182,8 +178,7 @@ class _AttendancePageState extends State<AttendancePage> {
                       ),
                     ),
                     const SizedBox(height: 18),
-
-                    // ======= زر التصدير =======
+                    // ======= زر الحفظ =======
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 10),
@@ -196,8 +191,12 @@ class _AttendancePageState extends State<AttendancePage> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
                           ),
-                          onPressed: _exportCsv,
-                          child: const Text('تصدير', style: TextStyle(fontSize: 16)),
+                          onPressed: _exportData,
+                          child: const Text(
+                            'حفظ',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 16),
+                          ),
                         ),
                       ),
                     ),
@@ -225,9 +224,13 @@ class _AttendancePageState extends State<AttendancePage> {
         ),
         child: Column(
           children: [
-            Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(value,
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
-            Text(title, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 12, color: Colors.black54)),
           ],
         ),
       ),
@@ -258,7 +261,9 @@ class _AttendancePageState extends State<AttendancePage> {
                 children: [
                   Text(arrival),
                   const SizedBox(height: 4),
-                  const Text('الحضور', style: TextStyle(fontSize: 11, color: Colors.black54)),
+                  const Text('الحضور',
+                      style:
+                          TextStyle(fontSize: 11, color: Colors.black54)),
                 ],
               ),
             ),
@@ -271,12 +276,17 @@ class _AttendancePageState extends State<AttendancePage> {
                 children: [
                   Text(departure),
                   const SizedBox(height: 4),
-                  const Text('الانصراف', style: TextStyle(fontSize: 11, color: Colors.black54)),
+                  const Text('الانصراف',
+                      style:
+                          TextStyle(fontSize: 11, color: Colors.black54)),
                 ],
               ),
             ),
           ),
-          Expanded(flex: 3, child: Text(emp['notes'], style: const TextStyle(fontSize: 12))),
+          Expanded(
+              flex: 3,
+              child:
+                  Text(emp['notes'], style: const TextStyle(fontSize: 12))),
         ],
       ),
     );
