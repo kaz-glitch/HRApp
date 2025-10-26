@@ -1,9 +1,6 @@
-import 'dart:io';
-import 'dart:ui' as ui; // <- مهم: نستورد enum من dart:ui مع alias
+import 'dart:ui' as ui; // <- مهم: لاستعمال TextDirection.rtl
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'manger_home.dart';
 
 class AttendancePage extends StatefulWidget {
@@ -47,7 +44,7 @@ class _AttendancePageState extends State<AttendancePage> {
       locale: const Locale('ar', 'SA'),
       builder: (context, child) {
         return Directionality(
-          textDirection: ui.TextDirection.rtl, // استخدام ui.TextDirection
+          textDirection: ui.TextDirection.rtl,
           child: child ?? const SizedBox.shrink(),
         );
       },
@@ -63,29 +60,18 @@ class _AttendancePageState extends State<AttendancePage> {
     setState(() => emp['departure'] = TimeOfDay.now());
   }
 
-  Future<void> _exportCsv() async {
-    final rows = <List<String>>[];
-    rows.add(['الاسم', 'الحضور', 'الانصراف', 'الملاحظات']);
-    for (final r in _records) {
-      rows.add([
-        r['name'],
-        r['arrival']?.format(context) ?? '',
-        r['departure']?.format(context) ?? '',
-        r['notes'],
-      ]);
-    }
-
-    final csv = rows.map((e) => e.join(',')).join('\n');
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/attendance.csv');
-    await file.writeAsString(csv);
-    await Share.shareXFiles([XFile(file.path)], text: 'تصدير سجل الحضور');
+  void _exportCsv() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('تم حفظ البيانات مؤقتًا (ميزة التصدير غير مفعلة) 📄'),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: ui.TextDirection.rtl, // استخدام ui.TextDirection هنا أيضاً
+      textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFF2E2E33),
         appBar: AppBar(
@@ -130,7 +116,6 @@ class _AttendancePageState extends State<AttendancePage> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 18),
 
                     // ======= البحث + التاريخ =======
@@ -180,7 +165,6 @@ class _AttendancePageState extends State<AttendancePage> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 16),
 
                     // ======= الجدول =======
@@ -197,7 +181,6 @@ class _AttendancePageState extends State<AttendancePage> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 18),
 
                     // ======= زر التصدير =======
@@ -210,7 +193,8 @@ class _AttendancePageState extends State<AttendancePage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF86B399),
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                           ),
                           onPressed: _exportCsv,
                           child: const Text('تصدير', style: TextStyle(fontSize: 16)),

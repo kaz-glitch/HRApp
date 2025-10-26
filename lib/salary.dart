@@ -12,7 +12,8 @@ class _SalaryPageState extends State<SalaryPage> {
   int selectedMonth = DateTime.now().month;
   int selectedYear = DateTime.now().year;
 
-  List<Map<String, dynamic>> salaries = [
+  // قائمة الرواتب
+  final List<Map<String, dynamic>> salaries = [
     {"name": "محمد", "dept": "المبيعات", "job": "موظف مبيعات", "salary": 5000.0, "deduction": 200.0},
     {"name": "سارة", "dept": "المحاسبة", "job": "محاسبة", "salary": 5200.0, "deduction": 0.0},
     {"name": "عبدالله", "dept": "الدعم الفني", "job": "فني دعم", "salary": 4800.0, "deduction": 100.0},
@@ -24,7 +25,7 @@ class _SalaryPageState extends State<SalaryPage> {
     );
   }
 
-  void pickMonthYear() async {
+  void pickMonthYear() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -38,9 +39,10 @@ class _SalaryPageState extends State<SalaryPage> {
               height: 300.0,
               child: Column(
                 children: [
-                  const Text("اختر الشهر والسنة",
-                      style:
-                          TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  const Text(
+                    "اختر الشهر والسنة",
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -54,8 +56,7 @@ class _SalaryPageState extends State<SalaryPage> {
                             child: Text("شهر ${i + 1}"),
                           ),
                         ),
-                        onChanged: (v) =>
-                            setModalState(() => tempMonth = v ?? tempMonth),
+                        onChanged: (v) => setModalState(() => tempMonth = v ?? tempMonth),
                       ),
                       DropdownButton<int>(
                         value: tempYear,
@@ -66,8 +67,7 @@ class _SalaryPageState extends State<SalaryPage> {
                             child: Text("سنة ${DateTime.now().year - i}"),
                           ),
                         ),
-                        onChanged: (v) =>
-                            setModalState(() => tempYear = v ?? tempYear),
+                        onChanged: (v) => setModalState(() => tempYear = v ?? tempYear),
                       ),
                     ],
                   ),
@@ -84,8 +84,11 @@ class _SalaryPageState extends State<SalaryPage> {
                       });
                       Navigator.pop(context);
                     },
-                    child: const Text("تم", style: TextStyle(color: Colors.white, fontSize: 18.0)),
-                  )
+                    child: const Text(
+                      "تم",
+                      style: TextStyle(color: Colors.white, fontSize: 18.0),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -100,8 +103,10 @@ class _SalaryPageState extends State<SalaryPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF123B5A),
-        title: const Text("كشف الرواتب",
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "كشف الرواتب",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -121,9 +126,10 @@ class _SalaryPageState extends State<SalaryPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("الشهر: $selectedMonth / السنة: $selectedYear",
-                    style: const TextStyle(
-                        fontSize: 16.0, fontWeight: FontWeight.bold)),
+                Text(
+                  "الشهر: $selectedMonth / السنة: $selectedYear",
+                  style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFF3CF60),
@@ -140,43 +146,50 @@ class _SalaryPageState extends State<SalaryPage> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.85),
+                  color: const Color(0xFFFFFFFF).withValues(alpha: 0.85),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: ListView.builder(
                   itemCount: salaries.length,
                   itemBuilder: (context, index) {
                     var emp = salaries[index];
-                    double net = emp["salary"] - emp["deduction"];
+                    // نحول كل القيم إلى double لتفادي أي خطأ
+                    final double salary = (emp["salary"] as num).toDouble();
+                    final double deduction = (emp["deduction"] as num).toDouble();
+                    final double net = salary - deduction;
+
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
                       child: ListTile(
-                        title: Text("${emp["name"]} - ${emp["dept"]}",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16.0)),
+                        title: Text(
+                          "${emp["name"]} - ${emp["dept"]}",
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                        ),
                         subtitle: Text(
-                            "الوظيفة: ${emp["job"]}\nالراتب: ${emp["salary"]} ريال | الخصم: ${emp["deduction"]} ريال | الصافي: $net ريال"),
+                          "الوظيفة: ${emp["job"]}\nالراتب: $salary ريال | الخصم: $deduction ريال | الصافي: $net ريال",
+                        ),
                       ),
                     );
                   },
                 ),
               ),
             ),
-
             const SizedBox(height: 10.0),
+
             ElevatedButton(
               onPressed: exportData,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF80B6A1),
                 minimumSize: const Size(double.infinity, 50.0),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
               ),
               child: const Text(
                 "تصدير",
                 style: TextStyle(color: Colors.white, fontSize: 18.0),
               ),
-            )
+            ),
           ],
         ),
       ),
