@@ -1,114 +1,92 @@
+
+// monthly_attendance_screen.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MonthlyAttendanceListScreen extends StatelessWidget {
-  const MonthlyAttendanceListScreen({super.key});
+class MonthlyAttendanceScreen extends StatefulWidget {
+  const MonthlyAttendanceScreen({super.key});
 
-  final List<Map<String, dynamic>> attendanceData = const [
-    {'date': '2025-08-01', 'status': 'حضور'},
-    {'date': '2025-08-02', 'status': 'غياب'},
-    {'date': '2025-08-03', 'status': 'إجازة'},
-    {'date': '2025-08-04', 'status': 'حضور'},
-    {'date': '2025-08-05', 'status': 'حضور'},
-    {'date': '2025-08-06', 'status': 'إجازة'},
-    {'date': '2025-08-07', 'status': 'حضور'},
-    {'date': '2025-08-08', 'status': 'حضور'},
-    {'date': '2025-08-09', 'status': 'إجازة'},
-    {'date': '2025-08-10', 'status': 'غياب'},
-    // أكملي باقي الأيام حسب الحاجة
-  ];
+  @override
+  State<MonthlyAttendanceScreen> createState() => _MonthlyAttendanceScreenState();
+}
 
-  Color getStatusColor(String status) {
-    switch (status) {
-      case 'حضور':
-        return Colors.green;
-      case 'غياب':
-        return Colors.red;
-      case 'إجازة':
-        return Colors.orange;
-      default:
-        return Colors.grey;
-    }
-  }
+class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
+  static const Color darkBlue = Color(0xFF2E4A56);
+  static const Color beige = Color(0xFFE8DFC1);
+
+  // Mock monthly summary
+  final List<_DayEntry> days = List.generate(30, (i) {
+    final date = DateTime(2025, 10, i + 1);
+    final weekdayNames = ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'];
+    final wd = weekdayNames[date.weekday - 1];
+    return _DayEntry(
+      dayName: wd,
+      date: date,
+      checkIn: i % 6 == 2 ? '8:48' : '8:00',
+      checkOut: i % 5 == 1 ? '11:45' : '12:00',
+      late: i % 6 == 2,
+    );
+  });
+
+  String _fmtDate(DateTime d) => '${d.year}-${d.month.toString().padLeft(2,'0')}-${d.day.toString().padLeft(2,'0')}';
 
   @override
   Widget build(BuildContext context) {
-    final workDays = attendanceData.where((e) => e['status'] == 'حضور').length;
-    final offDays = attendanceData.where((e) => e['status'] == 'إجازة').length;
-    final unapprovedDays = attendanceData.where((e) => e['status'] == 'غياب').length;
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFE8DFC1),
+        backgroundColor: beige,
         appBar: AppBar(
-          backgroundColor: const Color(0xFF2E4A56),
-          title: Text('سجل الحضور الشهري', style: GoogleFonts.cairo()),
+          backgroundColor: darkBlue,
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_right, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+            tooltip: 'رجوع',
+          ),
+          title: Text('سجل الحضور الشهري', style: GoogleFonts.cairo(fontWeight: FontWeight.w800)),
+          centerTitle: true,
         ),
-        body: Padding(
+        body: ListView.separated(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: attendanceData.length,
-                  itemBuilder: (context, index) {
-                    final item = attendanceData[index];
-                    final color = getStatusColor(item['status']);
-
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: color,
-                          child: Text(
-                            '${index + 1}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        title: Text(
-                          item['date'],
-                          style: GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: color,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            item['status'],
-                            style: GoogleFonts.cairo(color: Colors.white, fontSize: 14),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+          itemCount: days.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 8),
+          itemBuilder: (context, i) {
+            final d = days[i];
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0,2))],
               ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              padding: const EdgeInsets.all(14),
+              child: Row(
                 children: [
-                  _buildSummaryBox('أيام العمل', workDays, Colors.green),
-                  _buildSummaryBox('أيام العطل', offDays, Colors.orange),
-                  _buildSummaryBox('أيام الغير معتمدة', unapprovedDays, Colors.red),
+                  Expanded(child: Text(d.dayName, style: GoogleFonts.cairo(fontWeight: FontWeight.w700))),
+                  Expanded(child: Text(_fmtDate(d.date), style: GoogleFonts.cairo())),
+                  Expanded(child: Text(d.checkIn, style: GoogleFonts.cairo(color: d.late ? const Color(0xFFE0626A) : Colors.black87, fontWeight: FontWeight.w700))),
+                  Expanded(child: Text(d.checkOut, style: GoogleFonts.cairo(fontWeight: FontWeight.w700))),
+                  if (d.late)
+                    Container(
+                      margin: const EdgeInsetsDirectional.only(start: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(color: const Color(0xFFE0626A), borderRadius: BorderRadius.circular(16)),
+                      child: Text('متأخر', style: GoogleFonts.cairo(color: Colors.white, fontWeight: FontWeight.w700)),
+                    ),
                 ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
   }
+}
 
-  Widget _buildSummaryBox(String label, int count, Color color) {
-    return Column(
-      children: [
-        Text(label, style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 4),
-        Text('$count', style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
-      ],
-    );
-  }
+class _DayEntry {
+  final String dayName;
+  final DateTime date;
+  final String checkIn;
+  final String checkOut;
+  final bool late;
+  _DayEntry({required this.dayName, required this.date, required this.checkIn, required this.checkOut, required this.late});
 }
