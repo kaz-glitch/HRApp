@@ -1,92 +1,212 @@
-
-// monthly_attendance_screen.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'attendance_screen.dart'; // صفحة الحضور السابقة
 
-class MonthlyAttendanceScreen extends StatefulWidget {
+class MonthlyAttendanceScreen extends StatelessWidget {
   const MonthlyAttendanceScreen({super.key});
 
   @override
-  State<MonthlyAttendanceScreen> createState() => _MonthlyAttendanceScreenState();
-}
-
-class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
-  static const Color darkBlue = Color(0xFF2E4A56);
-  static const Color beige = Color(0xFFE8DFC1);
-
-  // Mock monthly summary
-  final List<_DayEntry> days = List.generate(30, (i) {
-    final date = DateTime(2025, 10, i + 1);
-    final weekdayNames = ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'];
-    final wd = weekdayNames[date.weekday - 1];
-    return _DayEntry(
-      dayName: wd,
-      date: date,
-      checkIn: i % 6 == 2 ? '8:48' : '8:00',
-      checkOut: i % 5 == 1 ? '11:45' : '12:00',
-      late: i % 6 == 2,
-    );
-  });
-
-  String _fmtDate(DateTime d) => '${d.year}-${d.month.toString().padLeft(2,'0')}-${d.day.toString().padLeft(2,'0')}';
-
-  @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: beige,
-        appBar: AppBar(
-          backgroundColor: darkBlue,
-          leading: IconButton(
-            icon: const Icon(Icons.chevron_right, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-            tooltip: 'رجوع',
+    // الألوان الأساسية المستخدمة
+    const Color backgroundColor = Color(0xFFE8DAB2);
+    const Color headerColor = Color(0xFF1F4E5F);
+    const Color workDayColor = Color(0xFFA9C97A);
+    const Color holidayColor = Color(0xFFF2CE63);
+    const Color absentDayColor = Color(0xFFB4D6C1);
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: headerColor,
+        elevation: 0,
+        leadingWidth: 40, // لضبط موقع السهم أقصى اليسار
+        leading: Align(
+          alignment: Alignment.centerLeft,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const AttendanceScreen()),
+              );
+            },
           ),
-          title: Text('سجل الحضور الشهري', style: GoogleFonts.cairo(fontWeight: FontWeight.w800)),
-          centerTitle: true,
         ),
-        body: ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: days.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
-          itemBuilder: (context, i) {
-            final d = days[i];
-            return Container(
+        title: const Text(
+          'سجل الحضور الشهري',
+          style: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // البطاقة الرئيسية
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0,2))],
+                borderRadius: BorderRadius.circular(12),
               ),
-              padding: const EdgeInsets.all(14),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(child: Text(d.dayName, style: GoogleFonts.cairo(fontWeight: FontWeight.w700))),
-                  Expanded(child: Text(_fmtDate(d.date), style: GoogleFonts.cairo())),
-                  Expanded(child: Text(d.checkIn, style: GoogleFonts.cairo(color: d.late ? const Color(0xFFE0626A) : Colors.black87, fontWeight: FontWeight.w700))),
-                  Expanded(child: Text(d.checkOut, style: GoogleFonts.cairo(fontWeight: FontWeight.w700))),
-                  if (d.late)
-                    Container(
-                      margin: const EdgeInsetsDirectional.only(start: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(color: const Color(0xFFE0626A), borderRadius: BorderRadius.circular(16)),
-                      child: Text('متأخر', style: GoogleFonts.cairo(color: Colors.white, fontWeight: FontWeight.w700)),
+                  const Text(
+                    'سجل الحضور',
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: headerColor,
                     ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // القائمة المنسدلة لاختيار الشهر
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          'أغسطس-2025',
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // عناوين الأيام
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: const [
+                      Text('السبت'),
+                      Text('الجمعة'),
+                      Text('الخميس'),
+                      Text('الأربعاء'),
+                      Text('الثلاثاء'),
+                      Text('الاثنين'),
+                      Text('الأحد'),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // شبكة الأيام (30 يوم)
+                  GridView.count(
+                    crossAxisCount: 7,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: List.generate(30, (index) {
+                      int day = index + 1;
+
+                      // تحديد اللون حسب اليوم
+                      Color dayColor;
+                      if ([3, 10, 17, 24].contains(day)) {
+                        dayColor = holidayColor; // عطلة
+                      } else if ([5, 12].contains(day)) {
+                        dayColor = absentDayColor; // غياب
+                      } else {
+                        dayColor = workDayColor; // عمل
+                      }
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: dayColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$day',
+                            style: const TextStyle(
+                              fontFamily: 'Cairo',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                 ],
               ),
-            );
-          },
+            ),
+
+            const SizedBox(height: 30),
+
+            // الإحصائيات في الأسفل
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildSummaryCard('أيام العمل', '20', workDayColor),
+                _buildSummaryCard('أيام العطل', '8', holidayColor),
+                _buildSummaryCard('أيام الغير معتمدة', '0', absentDayColor),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
-class _DayEntry {
-  final String dayName;
-  final DateTime date;
-  final String checkIn;
-  final String checkOut;
-  final bool late;
-  _DayEntry({required this.dayName, required this.date, required this.checkIn, required this.checkOut, required this.late});
+  // ويدجت صغيرة لبطاقات الإحصائيات
+  Widget _buildSummaryCard(String title, String value, Color color) {
+    return Container(
+      width: 100,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade400,
+            blurRadius: 4,
+            offset: const Offset(2, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
