@@ -1,90 +1,114 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MonthlyAttendanceScreen extends StatefulWidget {
-  const MonthlyAttendanceScreen({super.key});
+class MonthlyAttendanceListScreen extends StatelessWidget {
+  const MonthlyAttendanceListScreen({super.key});
 
-  @override
-  State<MonthlyAttendanceScreen> createState() => _MonthlyAttendanceScreenState();
-}
+  final List<Map<String, dynamic>> attendanceData = const [
+    {'date': '2025-08-01', 'status': 'حضور'},
+    {'date': '2025-08-02', 'status': 'غياب'},
+    {'date': '2025-08-03', 'status': 'إجازة'},
+    {'date': '2025-08-04', 'status': 'حضور'},
+    {'date': '2025-08-05', 'status': 'حضور'},
+    {'date': '2025-08-06', 'status': 'إجازة'},
+    {'date': '2025-08-07', 'status': 'حضور'},
+    {'date': '2025-08-08', 'status': 'حضور'},
+    {'date': '2025-08-09', 'status': 'إجازة'},
+    {'date': '2025-08-10', 'status': 'غياب'},
+    // أكملي باقي الأيام حسب الحاجة
+  ];
 
-class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
-  final Map<DateTime, String> attendanceStatus = {
-    DateTime(2025, 1, 1): 'حضور',
-    DateTime(2025, 1, 2): 'غياب',
-    DateTime(2025, 1, 3): 'إجازة',
-    DateTime(2025, 1, 4): 'حضور',
-  };
-
-  Color _statusColor(String status) {
+  Color getStatusColor(String status) {
     switch (status) {
       case 'حضور':
-        return const Color(0xFF6BC17A);
+        return Colors.green;
       case 'غياب':
-        return const Color(0xFFE0626A);
+        return Colors.red;
       case 'إجازة':
-        return const Color(0xFFE7C46D);
+        return Colors.orange;
       default:
-        return Colors.grey.shade400;
+        return Colors.grey;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    const darkBlue = Color(0xFF2E4A56);
+    final workDays = attendanceData.where((e) => e['status'] == 'حضور').length;
+    final offDays = attendanceData.where((e) => e['status'] == 'إجازة').length;
+    final unapprovedDays = attendanceData.where((e) => e['status'] == 'غياب').length;
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFE8DFC1),
         appBar: AppBar(
-          backgroundColor: darkBlue,
-          leading: IconButton(
-            icon: const Icon(Icons.chevron_right),
-            onPressed: () => Navigator.of(context).maybePop(),
-          ),
+          backgroundColor: const Color(0xFF2E4A56),
           title: Text('سجل الحضور الشهري', style: GoogleFonts.cairo()),
         ),
-        body: ListView.separated(
+        body: Padding(
           padding: const EdgeInsets.all(16),
-          itemBuilder: (context, i) {
-            final date = attendanceStatus.keys.elementAt(i);
-            final status = attendanceStatus[date]!;
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
-                ],
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: attendanceData.length,
+                  itemBuilder: (context, index) {
+                    final item = attendanceData[index];
+                    final color = getStatusColor(item['status']);
+
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: color,
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        title: Text(
+                          item['date'],
+                          style: GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            item['status'],
+                            style: GoogleFonts.cairo(color: Colors.white, fontSize: 14),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-              child: Row(
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: _statusColor(status),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(status,
-                        style: GoogleFonts.cairo(color: Colors.white, fontWeight: FontWeight.w700)),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
-                      style: GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  const Icon(Icons.chevron_left),
+                  _buildSummaryBox('أيام العمل', workDays, Colors.green),
+                  _buildSummaryBox('أيام العطل', offDays, Colors.orange),
+                  _buildSummaryBox('أيام الغير معتمدة', unapprovedDays, Colors.red),
                 ],
               ),
-            );
-          },
-          separatorBuilder: (_, __) => const SizedBox(height: 10),
-          itemCount: attendanceStatus.length,
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSummaryBox(String label, int count, Color color) {
+    return Column(
+      children: [
+        Text(label, style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
+        Text('$count', style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+      ],
     );
   }
 }

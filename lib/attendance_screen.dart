@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'monthly_attendance_screen.dart';
+import 'monthly_attendance_screen.dart'; // تأكدي من المسار حسب مجلداتك
 
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
@@ -20,6 +20,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       isCheckedIn = true;
       checkInTime = DateTime.now();
     });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('✅ تم تسجيل الحضور')),
+    );
   }
 
   void handleCheckOut() {
@@ -27,6 +31,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       isCheckedOut = true;
       checkOutTime = DateTime.now();
     });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('✅ تم تسجيل الانصراف')),
+    );
   }
 
   @override
@@ -81,16 +89,16 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   ),
                 ),
 
-              const Spacer(),
+              const SizedBox(height: 24),
 
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const MonthlyAttendanceScreen()),
+                    MaterialPageRoute(builder: (_) => const MonthlyAttendanceListScreen()),
                   );
                 },
-                icon: const Icon(Icons.calendar_today),
-                label: Text('سجل الحضور الشهري', style: GoogleFonts.cairo(fontSize: 16)),
+                icon: const Icon(Icons.calendar_month),
+                label: Text('عرض سجل الحضور الشهري', style: GoogleFonts.cairo(fontSize: 16)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: darkBlue,
                   foregroundColor: Colors.white,
@@ -107,7 +115,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  'هذه البيانات تجريبية فقط. سيتم ربطها بقاعدة البيانات لاحقًا.',
+                  'عند الضغط على تسجيل الحضور سيتم تسجيل البيانات تلقائيًا.',
                   style: GoogleFonts.cairo(fontSize: 14, color: Colors.brown[700]),
                   textAlign: TextAlign.center,
                 ),
