@@ -4,8 +4,8 @@ import 'attendance.dart';
 import 'managerprofile.dart';
 import 'leave_management.dart'; // ✅ استدعاء صفحة إدارة الإجازات الجديدة
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MangerHome extends StatelessWidget {
+  const MangerHome ({super.key});
 
   @override
   Widget build(BuildContext context) {

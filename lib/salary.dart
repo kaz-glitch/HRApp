@@ -113,7 +113,7 @@ class _SalaryPageState extends State<SalaryPage> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const HomePage()),
+              MaterialPageRoute(builder: (_) => const MangerHome ()),
             );
           },
         ),

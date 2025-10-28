@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'attendance_screen.dart'; // صفحة العودة
 
 class MonthlyAttendanceScreen extends StatelessWidget {
-  const MonthlyAttendanceScreen({Key? key}) : super(key: key);
+  const MonthlyAttendanceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

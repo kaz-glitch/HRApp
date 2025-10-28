@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'manger_home.dart';
 import 'dart:ui' as ui;
 
-
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
 
@@ -85,7 +84,7 @@ class _AttendancePageState extends State<AttendancePage> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const HomePage()),
+                MaterialPageRoute(builder: (_) => const MangerHome()),
               );
             },
           ),
@@ -103,6 +102,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 18),
+
                     // ======= الإحصائيات =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -115,7 +115,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         ],
                       ),
                     ),
+
                     const SizedBox(height: 18),
+
                     // ======= البحث + التاريخ =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -134,8 +136,7 @@ class _AttendancePageState extends State<AttendancePage> {
                                   border: InputBorder.none,
                                   hintText: '... البحث عن موظف',
                                 ),
-                                onChanged: (v) =>
-                                    setState(() => searchQuery = v),
+                                onChanged: (v) => setState(() => searchQuery = v),
                               ),
                             ),
                           ),
@@ -153,8 +154,7 @@ class _AttendancePageState extends State<AttendancePage> {
                                 children: [
                                   const Icon(Icons.calendar_month, size: 20),
                                   const SizedBox(width: 8),
-                                  Text(DateFormat('yyyy-MM-dd')
-                                      .format(selectedDate)),
+                                  Text(DateFormat('yyyy-MM-dd').format(selectedDate)),
                                 ],
                               ),
                             ),
@@ -162,7 +162,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         ],
                       ),
                     ),
+
                     const SizedBox(height: 16),
+
                     // ======= الجدول =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -172,12 +174,13 @@ class _AttendancePageState extends State<AttendancePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
-                          children:
-                              filteredRecords.map((r) => _recordRow(r)).toList(),
+                          children: filteredRecords.map((r) => _recordRow(r)).toList(),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 18),
+
                     // ======= زر الحفظ =======
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -194,8 +197,7 @@ class _AttendancePageState extends State<AttendancePage> {
                           onPressed: _exportData,
                           child: const Text(
                             'حفظ',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
                       ),
@@ -229,8 +231,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             Text(title,
-                style:
-                    const TextStyle(fontSize: 12, color: Colors.black54)),
+                style: const TextStyle(fontSize: 12, color: Colors.black54)),
           ],
         ),
       ),
@@ -262,8 +263,7 @@ class _AttendancePageState extends State<AttendancePage> {
                   Text(arrival),
                   const SizedBox(height: 4),
                   const Text('الحضور',
-                      style:
-                          TextStyle(fontSize: 11, color: Colors.black54)),
+                      style: TextStyle(fontSize: 11, color: Colors.black54)),
                 ],
               ),
             ),
@@ -277,18 +277,17 @@ class _AttendancePageState extends State<AttendancePage> {
                   Text(departure),
                   const SizedBox(height: 4),
                   const Text('الانصراف',
-                      style:
-                          TextStyle(fontSize: 11, color: Colors.black54)),
+                      style: TextStyle(fontSize: 11, color: Colors.black54)),
                 ],
               ),
             ),
           ),
           Expanded(
               flex: 3,
-              child:
-                  Text(emp['notes'], style: const TextStyle(fontSize: 12))),
+              child: Text(emp['notes'], style: const TextStyle(fontSize: 12))),
         ],
       ),
     );
   }
 }
+
