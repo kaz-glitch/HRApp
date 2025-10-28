@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     // مثال تجريبي:
-    if (jobNumber == 'admin' && password == '1234') {
+    if (jobNumber == 'manage' && password == '1234') {
       // المدير — تأكد إن اسم الكلاس في manger_home.dart هو ManagerHome
       Navigator.pushReplacement(
         context,

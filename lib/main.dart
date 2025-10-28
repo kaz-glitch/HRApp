@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'homepaeg.dart'; 
 
-void main() {
-  runApp(const EmployeeDashboardApp());
+import 'login_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(const MyApp());
 }
 
-class EmployeeDashboardApp extends StatelessWidget {
-  const EmployeeDashboardApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final baseTheme = ThemeData(
+      useMaterial3: true,
+    );
+
     return MaterialApp(
-      locale: const Locale('ar'),
-      supportedLocales: const [Locale('ar')],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
       debugShowCheckedModeBanner: false,
-      title: 'لوحة الموظف',
-      theme: ThemeData(
-        useMaterial3: false,
-        textTheme: GoogleFonts.cairoTextTheme(),
-        scaffoldBackgroundColor: const Color(0xFFE8DFC1),
+      title: 'Login Demo',
+      theme: baseTheme.copyWith(
+        textTheme: GoogleFonts.cairoTextTheme(baseTheme.textTheme),
       ),
-      home: const Directionality(
-        textDirection: TextDirection.rtl,
-        child: HomePage(),
-      ),
+      home: const LoginScreen(), // ✅ يبدأ مباشرة بصفحة تسجيل الدخول
     );
   }
 }
