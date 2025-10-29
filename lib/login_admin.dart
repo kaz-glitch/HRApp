@@ -1,4 +1,4 @@
-import 'package:adminpages_/admin_home.dart';
+import 'admin_home.dart';
 import 'package:flutter/material.dart';
 void main() {
   runApp(const MyApp());
