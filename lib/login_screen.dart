@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'forgot_password_step1.dart';
-import 'homepaeg.dart'; // واجهة الموظف
-import 'manger_home.dart'; // ملفك اسمه بهذا الشكل (أو غيّره manager_home.dart)
+
+
+
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,46 +15,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController jobNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   bool isPasswordVisible = false;
-
-  void _login() {
-    final jobNumber = jobNumberController.text.trim();
-    final password = passwordController.text.trim();
-
-    if (jobNumber.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء إدخال الرقم الوظيفي وكلمة المرور')),
-      );
-      return;
-    }
-
-    // مثال تجريبي:
-    if (jobNumber == 'manage' && password == '1234') {
-      // المدير — تأكد إن اسم الكلاس في manger_home.dart هو ManagerHome
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MangerHome()),
-      );
-    } else if (jobNumber == 'emp' && password == '1234') {
-      // الموظف
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } else {
-      // بيانات خاطئة
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('بيانات الدخول غير صحيحة')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
+    return Directionality( // لجعل النصوص من اليمين لليسار
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5EEDC),
+        backgroundColor: const Color(0xFFF5EEDC), // الخلفية البيج مثل الصورة
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -60,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // شعار الشركة
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -78,6 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
+
+                  // البطاقة البيضاء
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -104,6 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
+
+                        // الرقم الوظيفي
                         TextField(
                           controller: jobNumberController,
                           decoration: InputDecoration(
@@ -114,6 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
+
+                        // كلمة المرور
                         TextField(
                           controller: passwordController,
                           obscureText: !isPasswordVisible,
@@ -121,7 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             labelText: 'كلمة المرور',
                             suffixIcon: IconButton(
                               icon: Icon(
-                                isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -134,32 +114,46 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ForgotPasswordStep1(),
-                                ),
-                              );
-                            },
-                            child: const Text('نسيت كلمة المرور؟', style: TextStyle(color: Colors.grey)),
+                           onPressed: () {
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ForgotPasswordStep1()),
+  );
+},
+
+                            child: const Text(
+                              'نسيت كلمة المرور؟',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ),
                         ),
+
                         const SizedBox(height: 10),
+                        // زر تسجيل الدخول
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.amber[600],
                               padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
-                            onPressed: _login,
-                            child: const Text('تسجيل الدخول', style: TextStyle(fontSize: 16, color: Colors.white)),
+                            onPressed: () {
+                              // هنا تقدر تربط قاعدة البيانات لاحقاً
+                              debugPrint('الرقم الوظيفي: ${jobNumberController.text}');
+                              debugPrint('كلمة المرور: ${passwordController.text}');
+                            },
+                            child: const Text(
+                              'تسجيل الدخول',
+                              style: TextStyle(fontSize: 16, color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
@@ -174,5 +168,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-
