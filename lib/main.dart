@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'homepaeg.dart'; 
+
+// 👇 استيراد الصفحة الجديدة التي تريدين عرضها أولاً
+import 'login_selection.dart';
 
 void main() {
   runApp(const EmployeeDashboardApp());
@@ -20,16 +22,20 @@ class EmployeeDashboardApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+
       debugShowCheckedModeBanner: false,
-      title: 'لوحة الموظف',
+      title: 'HR App',
+      
       theme: ThemeData(
         useMaterial3: false,
         textTheme: GoogleFonts.cairoTextTheme(),
         scaffoldBackgroundColor: const Color(0xFFE8DFC1),
       ),
+
+      // 👇👇 هنا يتم عرض صفحة الاختيار الجديدة مباشرة
       home: const Directionality(
         textDirection: TextDirection.rtl,
-        child: HomePage(),
+        child: LoginSelectionPage(),
       ),
     );
   }
