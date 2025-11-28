@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'otp_page.dart'; // تأكد تضيفه
 
 class RegisterCompanyPage extends StatelessWidget {
   const RegisterCompanyPage({super.key});
@@ -16,79 +17,97 @@ class RegisterCompanyPage extends StatelessWidget {
             color: const Color(0xFFE8DDBF),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Column(
-            children: [
-              Container(
-                width: 320,
-                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(22),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0xFF0E3C4D),
-                      offset: Offset(0, 6),
-                      blurRadius: 3,
-                    )
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Center(
-                      child: Text(
-                        "المعلومات",
-                        style: TextStyle(
-                          color: Color(0xFF0E3C4D),
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
+
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  width: 320,
+                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFF0E3C4D),
+                        offset: Offset(0, 6),
+                        blurRadius: 3,
+                      )
+                    ],
+                  ),
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Center(
+                        child: Text(
+                          "المعلومات",
+                          style: TextStyle(
+                            color: Color(0xFF0E3C4D),
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 25),
+                      const SizedBox(height: 25),
 
-                    _label("اسم الشركة"),
-                    _inputField(Icons.person, "اسم الشركة"),
+                      _label("اسم الشركة"),
+                      _inputField(Icons.business, "اسم الشركة"),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    _label("السجل التجاري"),
-                    _inputField(Icons.person, "السجل التجاري"),
+                      _label("السجل التجاري"),
+                      _inputField(Icons.confirmation_number, "السجل التجاري"),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    _label("موقع الشركة"),
-                    _inputField(Icons.person, "الخرج، حي فلان، شارع فلان"),
+                      _label("موقع الشركة"),
+                      _inputField(Icons.location_on_outlined, "الخرج، حي فلان، شارع فلان"),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    _label("رقم الجوال"),
-                    _inputField(Icons.person, "05********"),
+                      _label("رقم الجوال"),
+                      _inputField(Icons.phone, "05********"),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    _label("الإيميل"),
-                    _inputField(Icons.email_outlined, "example@example.com"),
+                      _label("الإيميل"),
+                      _inputField(Icons.email_outlined, "example@example.com"),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    _label("كلمة المرور"),
-                    _inputField(Icons.lock_outline, "كلمة المرور", isPassword: true),
+                      _label("كلمة المرور"),
+                      _inputField(Icons.lock_outline, "كلمة المرور", isPassword: true),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    _label("تأكيد كلمة المرور"),
-                    _inputField(Icons.lock_outline, "تأكيد كلمة المرور", isPassword: true),
+                      _label("تأكيد كلمة المرور"),
+                      _inputField(Icons.lock_outline, "تأكيد كلمة المرور", isPassword: true),
 
-                    const SizedBox(height: 25),
+                      const SizedBox(height: 25),
 
-                    // زر
-                    _yellowButton("اعادة كلمة المرور"),
-                  ],
+                      // زر التسجيل المتصل بـ OTP Page
+                      _yellowButton(
+                        "تسجيل شركة",
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: OtpPage(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -99,8 +118,9 @@ class RegisterCompanyPage extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
-        color: Colors.green,
+        color: Color(0xFF0E3C4D),
         fontSize: 14,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
@@ -122,6 +142,7 @@ class RegisterCompanyPage extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: hint,
                 border: InputBorder.none,
+                hintTextDirection: TextDirection.rtl,
               ),
               textDirection: TextDirection.rtl,
             ),
@@ -132,28 +153,31 @@ class RegisterCompanyPage extends StatelessWidget {
     );
   }
 
-  Widget _yellowButton(String text) {
-    return Container(
-      width: double.infinity,
-      height: 55,
-      decoration: BoxDecoration(
-        color: Color(0xFFF5D063),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 20,
-              color: Color(0xFF0E3C4D),
-              fontWeight: FontWeight.bold,
+  Widget _yellowButton(String text, {required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: 55,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5D063),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 20,
+                color: Color(0xFF0E3C4D),
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
-          const Icon(Icons.arrow_forward_ios, size: 20, color: Color(0xFF0E3C4D)),
-        ],
+            const SizedBox(width: 10),
+            const Icon(Icons.arrow_forward_ios, size: 20, color: Color(0xFF0E3C4D)),
+          ],
+        ),
       ),
     );
   }
