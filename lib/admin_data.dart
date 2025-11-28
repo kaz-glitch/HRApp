@@ -193,7 +193,7 @@ class UserProfileScreen extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
