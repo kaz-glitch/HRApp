@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// 👇 استيراد الصفحة الجديدة التي تريدين عرضها أولاً
 import 'login_selection.dart';
 
 void main() {
