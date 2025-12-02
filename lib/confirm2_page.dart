@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart'; // ← مهم جداً
+import 'login_page.dart'; // ضروري
 
-class ConfirmPage extends StatelessWidget {
-  const ConfirmPage({super.key});
+class Confirm2Page extends StatelessWidget {
+  const Confirm2Page({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,9 @@ class ConfirmPage extends StatelessWidget {
         child: Center(
           child: Card(
             color: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
             elevation: 8,
             child: SizedBox(
               width: 360,
@@ -31,15 +33,23 @@ class ConfirmPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.all(12),
-                      child: const Icon(Icons.verified, color: Color(0xFF7FBF99), size: 40),
+                      child: const Icon(
+                        Icons.verified,
+                        color: Color(0xFF7FBF99),
+                        size: 40,
+                      ),
                     ),
 
                     const SizedBox(height: 18),
 
                     const Text(
-                      'سيتم مراجعة المعلومات وارسال المخطط',
+                      'تمت إعادة كلمة المرور بنجاح',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black87),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
                     ),
 
                     const SizedBox(height: 18),
@@ -48,18 +58,28 @@ class ConfirmPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginPage()),
-                          (route) => false, // يحذف كل الصفحات القديمة
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                          (route) => false, // يحذف كل الصفحات
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: teal,
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 18,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                       child: const Text(
-                        'العودة',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        'الذهاب إلى تسجيل الدخول',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],

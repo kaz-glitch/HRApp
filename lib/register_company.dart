@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'otp_page.dart'; // تأكد تضيفه
+import 'login_page.dart';       // ← مهم جداً للرجوع للصفحة الرئيسية
+import 'otp_page.dart';        // صفحة OTP
 
 class RegisterCompanyPage extends StatelessWidget {
   const RegisterCompanyPage({super.key});
@@ -8,6 +9,29 @@ class RegisterCompanyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF4A4A4A),
+
+      // ---------------- زر الرجوع الرئيسي ----------------
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFFE8DDBF),
+            size: 30,
+          ),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginPage()),
+              (route) => false,
+            );
+          },
+        ),
+      ),
+      // --------------------------------------------------
+
       body: Center(
         child: Container(
           width: 380,
@@ -88,7 +112,6 @@ class RegisterCompanyPage extends StatelessWidget {
 
                       const SizedBox(height: 25),
 
-                      // زر التسجيل المتصل بـ OTP Page
                       _yellowButton(
                         "تسجيل شركة",
                         onTap: () {
@@ -113,6 +136,8 @@ class RegisterCompanyPage extends StatelessWidget {
       ),
     );
   }
+
+  // -------------------- Widgets --------------------
 
   Widget _label(String text) {
     return Text(
