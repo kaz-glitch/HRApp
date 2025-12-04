@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'manger_home.dart';
 import 'dart:ui' as ui;
 
 class AttendancePage extends StatefulWidget {
-  const AttendancePage({super.key});
+  // جعل المتغير اختياري وليس required
+  final bool isManager;
+  const AttendancePage({super.key, this.isManager = false});
 
   @override
   State<AttendancePage> createState() => _AttendancePageState();
@@ -82,10 +83,7 @@ class _AttendancePageState extends State<AttendancePage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const MangerHome()),
-              );
+              Navigator.pop(context); // رجوع بسيط بدون منطق المدير/الموظف
             },
           ),
         ),
@@ -102,8 +100,6 @@ class _AttendancePageState extends State<AttendancePage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 18),
-
-                    // ======= الإحصائيات =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
                       child: Row(
@@ -115,10 +111,7 @@ class _AttendancePageState extends State<AttendancePage> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 18),
-
-                    // ======= البحث + التاريخ =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
@@ -162,10 +155,7 @@ class _AttendancePageState extends State<AttendancePage> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 16),
-
-                    // ======= الجدول =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Container(
@@ -178,13 +168,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 18),
-
-                    // ======= زر الحفظ =======
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -290,4 +276,3 @@ class _AttendancePageState extends State<AttendancePage> {
     );
   }
 }
-

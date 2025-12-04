@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'login_screen.dart';
+import 'login_page.dart';
 
 class ForgotPasswordSuccess extends StatelessWidget {
   const ForgotPasswordSuccess({super.key});
@@ -62,7 +62,7 @@ class ForgotPasswordSuccess extends StatelessWidget {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
+                        builder: (context) => const LoginPage(),
                       ),
                       (route) => false,
                     );

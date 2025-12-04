@@ -1,8 +1,31 @@
 import 'package:flutter/material.dart';
 import 'new_message_page.dart';
 
-class MessagesPage extends StatelessWidget {
+class MessagesPage extends StatefulWidget {
   const MessagesPage({super.key});
+
+  @override
+  State<MessagesPage> createState() => _MessagesPageState();
+}
+
+class _MessagesPageState extends State<MessagesPage> {
+  String selectedTab = "الكل";
+
+  final List<Map<String, String>> messages = [
+    {"name": "المدير", "msg": "يرجى مراجعة التقرير"},
+    {"name": "أحمد", "msg": "تم رفع الملف"},
+    {"name": "سارة", "msg": "أحتاج مساعدة"},
+    {"name": "المدير", "msg": "موعد اجتماع"},
+    {"name": "محمد", "msg": "هل يمكنك التوضيح؟"},
+  ];
+
+  List<Map<String, String>> get filteredMessages {
+    if (selectedTab == "الكل") return messages;
+    if (selectedTab == "المدير") {
+      return messages.where((m) => m["name"] == "المدير").toList();
+    }
+    return messages.where((m) => m["name"] != "المدير").toList(); // الفريق
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,35 +53,36 @@ class MessagesPage extends StatelessWidget {
 
       body: Column(
         children: [
-
-          // Tabs
+          // التابات
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             color: const Color(0xFFE8DDBF),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _tab("الكل", true),
-                _tab("المدير", false),
-                _tab("الفريق", false),
+                _tab("الكل"),
+                _tab("المدير"),
+                _tab("الفريق"),
               ],
             ),
           ),
 
-          // List
+          // القائمة
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(15),
               color: const Color(0xFFE8DDBF),
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: filteredMessages.length,
                 itemBuilder: (context, index) {
-                  return _messageTile();
+                  final msg = filteredMessages[index];
+                  return _messageTile(msg["name"]!, msg["msg"]!);
                 },
               ),
             ),
           ),
 
+          // زر جديد
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: InkWell(
@@ -92,8 +116,8 @@ class MessagesPage extends StatelessWidget {
     );
   }
 
-  // عنصر القائمة
-  Widget _messageTile() {
+  // عنصر قائمة الرسالة
+  Widget _messageTile(String name, String message) {
     return Container(
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 12),
@@ -112,42 +136,57 @@ class MessagesPage extends StatelessWidget {
 
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text("اسم الموظف",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold)),
-              SizedBox(height: 5),
-              Text("رسالة جديدة",
-                  style: TextStyle(color: Colors.grey, fontSize: 13)),
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                message,
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
+              ),
             ],
           ),
 
           const Spacer(),
-          const Text("9:33 م",
-              style: TextStyle(color: Colors.black54, fontSize: 14)),
+          const Text(
+            "9:33 م",
+            style: TextStyle(color: Colors.black54, fontSize: 14),
+          ),
         ],
       ),
     );
   }
 
-  // التاب
-  Widget _tab(String title, bool active) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 7),
-      decoration: BoxDecoration(
-        color: active ? const Color(0xFF8CB9A8) : Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: active ? Colors.white : Colors.black87,
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
+  // شكل التاب
+  Widget _tab(String title) {
+    final bool active = selectedTab == title;
+
+    return InkWell(
+      onTap: () {
+        setState(() => selectedTab = title);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 7),
+        decoration: BoxDecoration(
+          color: active ? const Color(0xFF8CB9A8) : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: active ? Colors.white : Colors.black87,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
   }
 }
+

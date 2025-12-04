@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'register_company.dart';
 import 'forgot_password_page.dart';
-import 'emp_home.dart'; // استدعاء ملف الموظف
-import 'manager_home.dart'; // استدعاء ملف المدير
+import 'emp_home.dart';
+import 'manager_home.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Controllers لحفظ البيانات المدخلة
     TextEditingController emailController = TextEditingController();
     TextEditingController passController = TextEditingController();
 
@@ -141,7 +140,7 @@ class LoginPage extends StatelessWidget {
                         String email = emailController.text.trim();
                         String pass = passController.text.trim();
 
-                        // تحقق تجريبي للمدير
+                        // تسجيل دخول المدير
                         if (email == "manager@test.com" && pass == "123456") {
                           Navigator.pushReplacement(
                             context,
@@ -149,7 +148,7 @@ class LoginPage extends StatelessWidget {
                           );
                         }
 
-                        // تحقق تجريبي للموظف
+                        // تسجيل دخول الموظف
                         else if (email == "emp@test.com" && pass == "123456") {
                           Navigator.pushReplacement(
                             context,
@@ -157,6 +156,7 @@ class LoginPage extends StatelessWidget {
                           );
                         }
 
+                        // خطأ
                         else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -169,7 +169,7 @@ class LoginPage extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
-                      // زر سجل مستخدم جديد
+                      // زر سجل كمستخدم جديد
                       _yellowButton("سجل كمستخدم جديد", () {
                         Navigator.push(
                           context,

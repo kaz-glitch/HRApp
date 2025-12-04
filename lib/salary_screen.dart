@@ -1,6 +1,5 @@
 // lib/salary_screen.dart
 import 'package:flutter/material.dart';
-import 'homepaeg.dart'; // تأكدي أن هذا الملف موجود، أو غيّري المسار إلى المكان الصحيح
 
 /// صفحة كشف الراتب.
 /// ملاحظة: لو لم تكن قد أضفت خط Cairo في pubspec.yaml، ضيفيه لتحسين العرض:
@@ -57,11 +56,8 @@ class _SalaryScreenState extends State<SalaryScreen> {
             child: IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
               onPressed: () {
-                // عند الضغط يرجع إلى صفحة الملف الشخصي (profile_screen.dart)
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
+                // عند الضغط نرجع للصفحة السابقة (pop) — أفضل من pushReplacement هنا
+                Navigator.pop(context);
               },
             ),
           ),
@@ -88,7 +84,8 @@ class _SalaryScreenState extends State<SalaryScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [BoxShadow(color: Colors.black26.withOpacity(0.06), blurRadius: 8, offset: const Offset(2, 4))],
+                  // استخدمت Color.fromRGBO بدل withOpacity لتلافي التحذير
+                  boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.06), blurRadius: 8, offset: const Offset(2, 4))],
                 ),
                 child: Row(
                   children: [
@@ -153,7 +150,8 @@ class _SalaryScreenState extends State<SalaryScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: Colors.black26.withOpacity(0.06), blurRadius: 12, offset: const Offset(3, 6))],
+                  // استبدلت withOpacity هنا أيضًا
+                  boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.06), blurRadius: 12, offset: const Offset(3, 6))],
                 ),
                 child: Column(
                   children: [

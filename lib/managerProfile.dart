@@ -26,7 +26,7 @@ class ManagerProfilePage extends StatelessWidget {
             children: [
               const SizedBox(height: 12),
 
-              // ======= الهيدر =======
+              // ================= الهيدر =================
               ClipRRect(
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(24),
@@ -38,6 +38,7 @@ class ManagerProfilePage extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
+                      // زر الرجوع
                       Positioned(
                         left: 12,
                         top: 12,
@@ -45,19 +46,21 @@ class ManagerProfilePage extends StatelessWidget {
                           onPressed: () => Navigator.of(context).maybePop(),
                           icon: const Icon(Icons.chevron_right,
                               color: Colors.white, size: 32),
-                          tooltip: 'رجوع',
                         ),
                       ),
+
+                      // زر دليل النظام
                       Positioned(
                         right: 16,
                         top: 16,
                         child: IconButton(
                           icon: const Icon(Icons.lightbulb,
                               color: Colors.amberAccent, size: 28),
-                          tooltip: 'دليل النظام',
                           onPressed: () => showSystemGuide(context),
                         ),
                       ),
+
+                      // الصورة + الاسم
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -67,10 +70,13 @@ class ManagerProfilePage extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 2),
-                              color: Colors.white
+                              color: Colors.grey.shade300,
                             ),
-                            child: const Icon(Icons.person,
-                                color: Colors.white, size: 70),
+                            child: const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 70,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           Text(
@@ -90,9 +96,10 @@ class ManagerProfilePage extends StatelessWidget {
 
               const SizedBox(height: 18),
 
-              SectionCard(
+              // ================= أقسام البيانات =================
+              const SectionCard(
                 title: 'معلومات أساسية',
-                labels: const [
+                labels: [
                   'اسم المدير:',
                   'رقم الهاتف:',
                   'البريد الالكتروني:',
@@ -100,20 +107,23 @@ class ManagerProfilePage extends StatelessWidget {
                   'الجنسية:',
                 ],
               ),
+
               const SizedBox(height: 16),
-              SectionCard(
+
+              const SectionCard(
                 title: 'معلومات وظيفية',
-                labels: const [
+                labels: [
                   'المسمى الوظيفي:',
                   'تاريخ التعيين:',
                   'القسم:',
-                  'الراتب الاساسي:',
+                  'الراتب الأساسي:',
                   'صلاحيات المدير:',
                 ],
               ),
 
               const SizedBox(height: 18),
 
+              // ================= الأزرار =================
               Row(
                 textDirection: TextDirection.ltr,
                 children: [
@@ -160,12 +170,16 @@ class ManagerProfilePage extends StatelessWidget {
   }
 }
 
-// ======= نفس الـ SectionCard و LabelRow و _ActionButton كما هي =======
+//
+// ---------------------- الكروت والصفوف ----------------------
+//
+
 class SectionCard extends StatelessWidget {
   const SectionCard({super.key, required this.title, required this.labels});
 
   final String title;
   final List<String> labels;
+
   static const Color darkBlue = ManagerProfilePage.darkBlue;
 
   @override
@@ -182,15 +196,13 @@ class SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              title,
-              style: GoogleFonts.cairo(
-                color: darkBlue,
-                fontSize: 21,
-                fontWeight: FontWeight.w800,
-              ),
+          Text(
+            title,
+            textAlign: TextAlign.right,
+            style: GoogleFonts.cairo(
+              color: darkBlue,
+              fontSize: 21,
+              fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: 8),
@@ -219,15 +231,23 @@ class LabelRow extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Colors.black87,
-          height: 1.25,
         ),
       ),
     );
   }
 }
 
+//
+// ---------------------- زر الأكشن ----------------------
+//
+
 class _ActionButton extends StatelessWidget {
-  const _ActionButton({required this.color, required this.text, required this.icon, this.onPressed});
+  const _ActionButton({
+    required this.color,
+    required this.text,
+    required this.icon,
+    this.onPressed,
+  });
 
   final Color color;
   final String text;
@@ -259,4 +279,3 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
-
