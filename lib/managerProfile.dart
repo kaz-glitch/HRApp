@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'system_guide_overlay.dart';
 import 'request_ticket.dart';
+import 'forgot_password_page.dart';
 
 /// صفحة حساب المدير
 class ManagerProfilePage extends StatelessWidget {
@@ -137,6 +138,7 @@ class ManagerProfilePage extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (_) => const RequestTicketPage(
                               title: 'تعديل البيانات',
+                              hintText: 'اكتب وصف التعديل المطلوب:',
                             ),
                           ),
                         );
@@ -152,9 +154,8 @@ class ManagerProfilePage extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => const RequestTicketPage(
-                              title: 'تغيير كلمة المرور',
-                            ),
+                            builder: (_) =>
+                                const ForgotPasswordPage(), // الصفحة الصحيحة
                           ),
                         );
                       },

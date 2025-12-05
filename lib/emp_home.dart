@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'attendance.dart';
-import 'messages_page.dart';
+import 'attendance_screen.dart';
 import 'leave_request.dart';
+import 'messages_page.dart';
+import 'top_employees_screen.dart';
 import 'salary_screen.dart';
 import 'employee_profile_page.dart';
 
@@ -10,33 +11,57 @@ class EmployeeHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color mainColor = Color(0xFF1D566E);
-    const Color backColor = Color(0xFFE8DDB5);
-
     return Scaffold(
-      backgroundColor: backColor,
-      body: SafeArea(
+      backgroundColor: const Color(0xFFD9CBA5),
+
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            // =================== الهيدر ===================
+
+            // ------------------ HEADER ------------------
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-              color: mainColor,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+              decoration: const BoxDecoration(
+                color: Color(0xFF0E3C4D),
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(25),
+                  bottomLeft: Radius.circular(25),
+                ),
+              ),
+
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "اسم الشركة",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween
+,
+                children: [
+                  Row(
+                    children: const [
+                      Icon(Icons.check_circle_outline,
+                          color: Colors.white, size: 35),
+                      SizedBox(width: 10),
+                      Text(
+                        "اسم الشركة",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, color: mainColor, size: 28),
+
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const EmployeeProfilePage()),
+                      );
+                    },
+                    child: const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person,
+                          color: Color(0xFF0E3C4D), size: 28),
+                    ),
                   ),
                 ],
               ),
@@ -44,215 +69,169 @@ class EmployeeHomePage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // =================== البوكسات ===================
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // صف 1
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _homeBox(
-                          text: "أفضل خمسة موظفين",
-                          icon: Icons.emoji_events,
-                          color: const Color(0xFFC3DBD1),
-                        ),
-                        _homeBox(
-                          text: "طلب إجازة",
-                          icon: Icons.event_available,
-                          color: const Color(0xFFFFE08C),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const LeaveRequestPage()),
-                            );
-                          },
-                        ),
-                        _homeBox(
-                          text: "تسجيل الحضور والانصراف",
-                          icon: Icons.access_time,
-                          color: const Color(0xFFE8E1CC),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const AttendancePage()),
-                            );
-                          },
-                        ),
-                      ],
+            // ------------------ GRID MENU (3 rows × 2 items) ------------------
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1,
+
+                children: [
+                  _menuBox(
+                    title: "تسجيل الحضور",
+                    icon: Icons.access_time,
+                    color: const Color(0xFFC5E1C5),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AttendanceScreen()),
                     ),
+                  ),
 
-                    const SizedBox(height: 20),
-
-                    // صف 2
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _homeBox(
-                          text: "مراسلة",
-                          icon: Icons.message,
-                          color: const Color(0xFFAED8CC),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const MessagesPage()),
-                            );
-                          },
-                        ),
-                        _homeBox(
-                          text: "كشف الراتب",
-                          icon: Icons.receipt_long,
-                          color: mainColor,
-                          textColor: Colors.white,
-                          iconColor: Colors.white,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => SalaryScreen()),
-                            );
-                          },
-                        ),
-                      ],
+                  _menuBox(
+                    title: "طلب إجازة",
+                    icon: Icons.calendar_month,
+                    color: const Color(0xFFF7E48B),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LeaveRequestPage()),
                     ),
+                  ),
 
-                    const SizedBox(height: 30),
-
-                    // =================== الإشعارات ===================
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 18),
-                        child: Text(
-                          "الإشعارات",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                  _menuBox(
+                    title: "أفضل الموظفين",
+                    icon: Icons.emoji_events,
+                    color: const Color(0xFFD6E9A8),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TopEmployeesScreen()),
                     ),
+                  ),
 
-                    const SizedBox(height: 10),
+                  _menuBox(
+                    title: "كشف الراتب",
+                    icon: Icons.receipt_long,
+                    color: const Color(0xFF1D3F5E),
+                    iconColor: Colors.white,
+                    textColor: Colors.white,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SalaryScreen()),
+                    ),
+                  ),
 
-                    _notifBox("طلب إجازة من الموظف تركي"),
-                    const SizedBox(height: 10),
+                 
 
-                    _notifBox("تنبيه: تأخر 4 موظفين اليوم"),
-                    const SizedBox(height: 10),
-
-                    _notifBox("يوجد 2 طلبات معلقة تحتاج موافقة"),
-                    const SizedBox(height: 30),
-                  ],
-                ),
+                  _menuBox(
+                    title: "مراسلة",
+                    icon: Icons.message,
+                    color: const Color(0xFFC3E6D2),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MessagesPage()),
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            const SizedBox(height: 25),
+
+            // ------------------ NOTIFICATIONS TITLE ------------------
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Icon(Icons.notifications_active,
+                      color: Color(0xFF0E3C4D), size: 26),
+                  SizedBox(width: 10),
+                  Text(
+                    "الاشعارات",
+                    style: TextStyle(
+                      color: Color(0xFF0E3C4D),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // ------------------ NOTIFICATIONS LIST ------------------
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 20,
+              itemBuilder: (context, index) {
+                return _notificationItem("اشعار رقم ${index + 1}");
+              },
+            ),
+
+            const SizedBox(height: 25),
           ],
         ),
       ),
     );
   }
 
-  // =================== تصميم البوكس ===================
-  Widget _homeBox({
-    required String text,
+  // ----------------------------------------------------------------------
+  // MENU BOX
+  Widget _menuBox({
+    required String title,
     required IconData icon,
     required Color color,
-    Color iconColor = Colors.black87,
-    Color textColor = Colors.black87,
-    VoidCallback? onTap,
+    Color iconColor = Colors.black,
+    Color textColor = Colors.black,
+    required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
-        width: 115,
-        height: 150,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 6,
-              offset: Offset(2, 3),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(18),
         ),
+        padding: const EdgeInsets.all(12),
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: iconColor),
+            Icon(icon, size: 48, color: iconColor),
             const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.w700,
-                ),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: textColor,
+                fontWeight: FontWeight.bold,
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 
-  // =================== الإشعار مع حركة التنبيه ===================
-  Widget _notifBox(String text) {
+  // ----------------------------------------------------------------------
+  // NOTIFICATION ITEM
+  Widget _notificationItem(String text) {
     return Container(
-      width: 330,
-      height: 55,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(2, 2),
-          ),
-        ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          // أيقونة الجرس داخل دائرة مثل الصورة
-          Container(
-            width: 24,
-            height: 24,
-            decoration: const BoxDecoration(
-              color: Color(0xFF009E73),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.notifications,
-              size: 16,
-              color: Colors.white,
-            ),
-          ),
-
-          const SizedBox(width: 10),
-
-          Expanded(
-            child: Text(
-              text,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.black87, fontSize: 14),
       ),
     );
   }
 }
-

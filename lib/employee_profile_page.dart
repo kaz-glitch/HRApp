@@ -1,125 +1,272 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'system_guide_overlay.dart';
+import 'request_ticket.dart';
 import 'forgot_password_page.dart';
 
+/// صفحة حساب الموظف
 class EmployeeProfilePage extends StatelessWidget {
   const EmployeeProfilePage({super.key});
 
+  static const Color darkBlue = Color(0xFF2E4A56);
+  static const Color beige = Color(0xFFE8DFC1);
+  static const Color yellowBtn = Color(0xFFE7C46D);
+  static const Color greenBtn = Color(0xFF86B29A);
+  static const double _radius = 18;
+
   @override
   Widget build(BuildContext context) {
-    const mainColor = Color(0xFF1D566E);
-    const backColor = Color(0xFFE8DDB5);
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: beige,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 12),
 
-    return Scaffold(
-      backgroundColor: backColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // الهيدر
-            Container(
-              color: mainColor,
-              padding: const EdgeInsets.symmetric(vertical: 25),
-              child: Column(
-                children: const [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 50, color: mainColor),
+              // ================= الهيدر =================
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+                child: Container(
+                  height: 220,
+                  color: darkBlue,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // زر الرجوع
+                      Positioned(
+                        left: 12,
+                        top: 12,
+                        child: IconButton(
+                          onPressed: () => Navigator.of(context).maybePop(),
+                          icon: const Icon(Icons.chevron_right,
+                              color: Colors.white, size: 32),
+                        ),
+                      ),
+
+                     
+
+                      // الصورة + الاسم
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                              color: Colors.grey.shade300,
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 70,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'اسم الموظف',
+                            style: GoogleFonts.cairo(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    "اسم الموظف",
-                    style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              // ================= أقسام البيانات =================
+              const SectionCard(
+                title: 'معلومات أساسية',
+                labels: [
+                  'اسم الموظف:',
+                  'رقم الهاتف:',
+                  'البريد الالكتروني:',
+                  'تاريخ الميلاد:',
+                  'الجنسية:',
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              const SectionCard(
+                title: 'معلومات وظيفية',
+                labels: [
+                  'المسمى الوظيفي:',
+                  'تاريخ التعيين:',
+                  'القسم:',
+                  'الراتب الأساسي:',
+                  
+                ],
+              ),
+
+              const SizedBox(height: 18),
+
+              // ================= الأزرار =================
+              Row(
+                textDirection: TextDirection.ltr,
+                children: [
+                  Expanded(
+                    child: _ActionButton(
+                      color: yellowBtn,
+                      text: 'تعديل بيانات',
+                      icon: Icons.edit,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const RequestTicketPage(
+                              title: 'تعديل البيانات',
+                              hintText: 'اكتب وصف التعديل المطلوب:',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _ActionButton(
+                      color: greenBtn,
+                      text: 'تغيير كلمة المرور',
+                      icon: Icons.lock,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const ForgotPasswordPage(), // الصفحة الصحيحة
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // صندوق المعلومات
-            _infoCard("معلومات أساسية", [
-              "اسم الموظف:",
-              "رقم الهاتف:",
-              "البريد الإلكتروني:",
-              "تاريخ الميلاد:",
-              "الجنسية:",
-            ]),
-
-            const SizedBox(height: 15),
-
-            _infoCard("معلومات الوظيفة", [
-              "المسمى الوظيفي:",
-              "تاريخ التعيين:",
-              "القسم:",
-              "الراتب الأساسي:",
-            ]),
-
-            const SizedBox(height: 25),
-
-            // الأزرار
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _actionButton("تعديل بيانات", Colors.amber, Colors.black),
-                _actionButton(
-                  "تغيير كلمة المرور",
-                  Colors.green.shade300,
-                  Colors.black,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+}
 
-  // صندوق البيانات
-  Widget _infoCard(String title, List<String> fields) {
+//
+// ---------------------- الكروت والصفوف ----------------------
+//
+
+class SectionCard extends StatelessWidget {
+  const SectionCard({super.key, required this.title, required this.labels});
+
+  final String title;
+  final List<String> labels;
+
+  static const Color darkBlue = EmployeeProfilePage.darkBlue;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      width: 330,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 5)],
+        borderRadius: BorderRadius.circular(EmployeeProfilePage._radius),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          for (var f in fields)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              child: Text(f, textAlign: TextAlign.right, style: const TextStyle(fontSize: 15)),
+          Text(
+            title,
+            textAlign: TextAlign.right,
+            style: GoogleFonts.cairo(
+              color: darkBlue,
+              fontSize: 21,
+              fontWeight: FontWeight.w800,
             ),
+          ),
+          const SizedBox(height: 8),
+          for (final label in labels) ...[
+            LabelRow(text: label),
+            const SizedBox(height: 10),
+          ],
         ],
       ),
     );
   }
+}
 
-  // الأزرار
-  Widget _actionButton(String text, Color color, Color textColor, {void Function()? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 140,
-        height: 42,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4)],
+class LabelRow extends StatelessWidget {
+  const LabelRow({super.key, required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Text(
+        text,
+        textAlign: TextAlign.right,
+        style: GoogleFonts.cairo(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
         ),
-        child: Center(
-          child: Text(text, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+}
+
+//
+// ---------------------- زر الأكشن ----------------------
+//
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.color,
+    required this.text,
+    required this.icon,
+    this.onPressed,
+  });
+
+  final Color color;
+  final String text;
+  final IconData icon;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, color: Colors.white),
+      label: Text(
+        text,
+        style: GoogleFonts.cairo(
+          color: Colors.white,
+          fontWeight: FontWeight.w800,
+          fontSize: 15.5,
         ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(EmployeeProfilePage._radius - 2),
+        ),
+        elevation: 3,
       ),
     );
   }

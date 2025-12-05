@@ -4,7 +4,7 @@ import 'leave_request.dart';
 import 'messages_page.dart';
 import 'top_employees_screen.dart';
 import 'salary_screen.dart';
-import 'profile_page.dart';
+import 'managerProfile.dart';
 import 'leave_management.dart';
 
 class ManagerHomePage extends StatelessWidget {
@@ -13,23 +13,32 @@ class ManagerHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2E9D8),
+      backgroundColor: const Color(0xFFD9CBA5),
 
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            // ======= الهيدر =======
+
+            // ------------------ HEADER ------------------
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-              decoration: const BoxDecoration(color: Color(0xFF0E3C4D)),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+              decoration: const BoxDecoration(
+                color: Color(0xFF0E3C4D),
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(25),
+                  bottomLeft: Radius.circular(25),
+                ),
+              ),
+
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween
+,
                 children: [
                   Row(
                     children: const [
-                      Icon(Icons.check_box_outlined,
-                          color: Colors.white, size: 26),
-                      SizedBox(width: 6),
+                      Icon(Icons.check_circle_outline,
+                          color: Colors.white, size: 35),
+                      SizedBox(width: 10),
                       Text(
                         "اسم الشركة",
                         style: TextStyle(
@@ -45,174 +54,150 @@ class ManagerHomePage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const ProfilePage()),
+                        MaterialPageRoute(builder: (_) => const ManagerProfilePage()),
                       );
                     },
-                    child: const Icon(Icons.person,
-                        color: Colors.white, size: 30),
+                    child: const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person,
+                          color: Color(0xFF0E3C4D), size: 28),
+                    ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
 
-            // ====== شبكة مصغرة (3 أعمدة) ======
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: GridView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 0.82,
+            // ------------------ GRID MENU (3 rows × 2 items) ------------------
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1,
+
+                children: [
+                  _menuBox(
+                    title: "تسجيل الحضور",
+                    icon: Icons.access_time,
+                    color: const Color(0xFFC5E1C5),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AttendanceScreen()),
+                    ),
                   ),
-                  children: [
-                    _miniButton(
-                      context,
-                      icon: Icons.access_time,
-                      label: "تسجيل الحضور والانصراف",
-                      color: const Color(0xFFA8C4A4),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const AttendanceScreen(),
-                          ),
-                        );
-                      },
-                    ),
 
-                    _miniButton(
+                  _menuBox(
+                    title: "طلب إجازة",
+                    icon: Icons.calendar_month,
+                    color: const Color(0xFFF7E48B),
+                    onTap: () => Navigator.push(
                       context,
-                      icon: Icons.calendar_month,
-                      label: "طلب إجازة",
-                      color: const Color(0xFFF5D063),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const LeaveRequestPage(),
-                          ),
-                        );
-                      },
+                      MaterialPageRoute(builder: (_) => const LeaveRequestPage()),
                     ),
+                  ),
 
-                    _miniButton(
+                  _menuBox(
+                    title: "أفضل الموظفين",
+                    icon: Icons.emoji_events,
+                    color: const Color(0xFFD6E9A8),
+                    onTap: () => Navigator.push(
                       context,
-                      icon: Icons.emoji_events,
-                      label: "أفضل خمسة موظفين",
-                      color: const Color(0xFFC8D5A6),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const TopEmployeesScreen(),
-                          ),
-                        );
-                      },
+                      MaterialPageRoute(builder: (_) => const TopEmployeesScreen()),
                     ),
+                  ),
 
-                    _miniButton(
+                  _menuBox(
+                    title: "كشف الراتب",
+                    icon: Icons.receipt_long,
+                    color: const Color(0xFF1D3F5E),
+                    iconColor: Colors.white,
+                    textColor: Colors.white,
+                    onTap: () => Navigator.push(
                       context,
-                      icon: Icons.receipt_long,
-                      label: "كشف الراتب",
-                      color: const Color(0xFF0E3C4D),
-                      textColor: Colors.white,
-                      iconColor: Colors.white,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SalaryScreen(),
-                          ),
-                        );
-                      },
+                      MaterialPageRoute(builder: (_) => const SalaryScreen()),
                     ),
+                  ),
 
-                    _miniButton(
+                  _menuBox(
+                    title: "إدارة الإجازات",
+                    icon: Icons.menu_book,
+                    color: const Color(0xFF88A49C),
+                    iconColor: Colors.white,
+                    textColor: Colors.white,
+                    onTap: () => Navigator.push(
                       context,
-                      icon: Icons.list_alt,
-                      label: "إدارة الإجازات",
-                      color: const Color(0xFF7F9A8C),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const VacationManagementPage(),
-                          ),
-                        );
-                      },
+                      MaterialPageRoute(builder: (_) => const VacationManagementPage()),
                     ),
+                  ),
 
-                    _miniButton(
+                  _menuBox(
+                    title: "مراسلة",
+                    icon: Icons.message,
+                    color: const Color(0xFFC3E6D2),
+                    onTap: () => Navigator.push(
                       context,
-                      icon: Icons.chat_bubble_outline,
-                      label: "مراسلة",
-                      color: const Color(0xFFA4D3C2),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const MessagesPage(),
-                          ),
-                        );
-                      },
+                      MaterialPageRoute(builder: (_) => const MessagesPage()),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
 
-            // ====== الإشعارات ======
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Text(
-                      "الإشعارات",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF0E3C4D),
-                      ),
+            // ------------------ NOTIFICATIONS TITLE ------------------
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Icon(Icons.notifications_active,
+                      color: Color(0xFF0E3C4D), size: 26),
+                  SizedBox(width: 10),
+                  Text(
+                    "الاشعارات",
+                    style: TextStyle(
+                      color: Color(0xFF0E3C4D),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-
-                    const SizedBox(height: 8),
-
-                    _notifBubble("طلب إجازة من الموظف تركي"),
-                    const SizedBox(height: 6),
-
-                    _notifBubble("تنبيه: تأخر 4 موظفين اليوم"),
-                    const SizedBox(height: 6),
-
-                    _notifBubble("يوجد 2 طلبات معلّقة تحتاج موافقة"),
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
+
+            const SizedBox(height: 10),
+
+            // ------------------ NOTIFICATIONS LIST ------------------
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 20,
+              itemBuilder: (context, index) {
+                return _notificationItem("اشعار رقم ${index + 1}");
+              },
+            ),
+
+            const SizedBox(height: 25),
           ],
         ),
       ),
     );
   }
 
-  // ========= زر صغير =========
-  Widget _miniButton(
-    BuildContext context, {
+  // ----------------------------------------------------------------------
+  // MENU BOX
+  Widget _menuBox({
+    required String title,
     required IconData icon,
-    required String label,
     required Color color,
-    Color textColor = const Color(0xFF0E3C4D),
-    Color iconColor = const Color(0xFF0E3C4D),
+    Color iconColor = Colors.black,
+    Color textColor = Colors.black,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -220,59 +205,43 @@ class ManagerHomePage extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(18),
         ),
+        padding: const EdgeInsets.all(12),
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 32, color: iconColor),
-            const SizedBox(height: 6),
+            Icon(icon, size: 48, color: iconColor),
+            const SizedBox(height: 12),
             Text(
-              label,
+              title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
                 color: textColor,
+                fontWeight: FontWeight.bold,
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 
-  // ========= فقاعة إشعار =========
-  Widget _notifBubble(String text) {
+  // ----------------------------------------------------------------------
+  // NOTIFICATION ITEM
+  Widget _notificationItem(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          )
-        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: Text(
-              text,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 13,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Icon(Icons.notifications, size: 16, color: Colors.teal),
-        ],
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.black87, fontSize: 14),
       ),
     );
   }
