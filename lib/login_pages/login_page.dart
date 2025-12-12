@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'register_company.dart';
 import 'forgot_password_page.dart';
-import 'emp_home.dart';
-import 'manager_home.dart';
+import 'package:employee/emp_pages/emp_home.dart';
+import 'package:employee/manager_pages/manager_home.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

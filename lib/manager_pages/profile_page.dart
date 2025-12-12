@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'forgot_password_page.dart';
+import 'package:employee/login_pages/forgot_password_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

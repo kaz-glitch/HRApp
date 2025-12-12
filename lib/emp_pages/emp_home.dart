@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'attendance_screen.dart';
-import 'leave_request.dart';
-import 'messages_page.dart';
-import 'top_employees_screen.dart';
-import 'salary_screen.dart';
+import 'package:employee/attendance_screen.dart';
+import 'package:employee/leave_request.dart';
+import 'package:employee/messages_page.dart';
+import 'package:employee/top_employees_screen.dart';
+import 'package:employee/salary_screen.dart';
 import 'employee_profile_page.dart';
 
 class EmployeeHomePage extends StatelessWidget {

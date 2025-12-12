@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'system_guide_overlay.dart';
-import 'request_ticket.dart';
-import 'forgot_password_page.dart';
+import 'package:employee/system_guide_overlay.dart';
+import 'package:employee/request_ticket.dart';
+import 'package:employee/login_pages/forgot_password_page.dart';
 
 /// صفحة حساب المدير
 class ManagerProfilePage extends StatelessWidget {
